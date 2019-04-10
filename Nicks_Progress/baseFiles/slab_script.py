@@ -1,3 +1,6 @@
+import sys
+
+from espresso import espresso
 from ase import Atoms
 from ase.calculators.emt import EMT
 from ase.constraints import FixAtoms
@@ -7,6 +10,9 @@ from ase.spacegroup import crystal
 from ase.visualize import view
 from ase.io import write
 from ase.io import read
+
+NUM_PW  = sys.argv[1]
+NUM_KPT = sys.argv[2]
 
 Pt_path = 'Pt_111.traj'
 
@@ -19,14 +25,16 @@ Pt_111 = surface(Pt, (1, 1, 1), 2)
 Pt_111.center(vacuum=10,axis=2)
 Pt_111_repeat = Pt_111.repeat((1,1,1))
 
+Pt_111_repeat.set_calculator(EMT())
+
 dyn = QuasiNewton(Pt_111_repeat, trajectory=Pt_path)
 dyn.run(fmax=3)
 
 Pt_molecule = read(Pt_path)
 
-Pt_molecule.calc = espresso(pw=400,
+Pt_molecule.calc = espresso(pw=NUM_PW,
                             dw=4500,
-                            kpts=(4,4,4),
+                            kpts=(NUM_KPT,NUM_KPT,1),
                             xc='PBE',
                             outdir='CO_pt',
                             convergence={'energy':1e-6,
@@ -39,6 +47,7 @@ Pt_molecule.calc = espresso(pw=400,
 #dyn.run(fmax=0.05)
 
 e_Pt = Pt_molecule.get_potential_energy()
-print("Pt potential energy: ", e_pt)
-
+print("v---------------------------------v")
+print("Pt potential energy: ", e_Pt)
+print("^---------------------------------^")
 write('Pt_calc.traj', Pt_molecule)

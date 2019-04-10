@@ -1,10 +1,11 @@
 import sys
 
 from ase import Atoms
+from espresso import espresso
 from ase.calculators.emt import EMT
 from ase.constraints import FixAtoms
 from ase.optimize import QuasiNewton
-from ase.build import surface, fcc111, add_adsorbate
+from ase.build import molecule, surface, fcc111, add_adsorbate
 from ase.spacegroup import crystal
 from ase.visualize import view
 from ase.io import write
@@ -13,8 +14,8 @@ from ase.io import read
 CO_path = 'CO_calc.traj'
 Pt_path = 'Pt_calc.traj'
 
-numPw  = sys.argv[1]
-numKpt = sys.argv[2]
+NUM_PW  = sys.argv[1]
+NUM_KPT = sys.argv[2]
 
 CO_molecule = read(CO_path)
 Pt_slab = read(Pt_path)
@@ -27,9 +28,9 @@ Pt_slab.set_constraint(constraint)
 
 add_adsorbate(Pt_slab, CO_molecule, height, position=(1, 1))
 
-Pt_slab.calc = espresso(pw=numPw,
+Pt_slab.calc = espresso(pw=NUM_PW,
                         dw=4500,
-                        kpts=(numKpt,numKpt,4),
+                        kpts=(NUM_KPT,NUM_KPT,1),
                         xc='PBE',
                         outdir='CO_pt',
                         convergence={'energy':1e-6,
