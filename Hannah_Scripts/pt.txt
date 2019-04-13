@@ -2,19 +2,6 @@ from espresso import espresso
 from ase.calculators.emt import EMT
 from ase.constraints import FixAtoms
 from ase.optimize import QuasiNewton
-from ase.build import molecule, surface, add_adsorbate
-from ase.spacegroup import crystal
-from ase.io import read, write
-import sys
-
-current_pw = 500
-current_k = 1
-
-a=3.923 #angstrom
-from espresso import espresso
-from ase.calculators.emt import EMT
-from ase.constraints import FixAtoms
-from ase.optimize import QuasiNewton
 from ase.build import surface
 from ase.spacegroup import crystal
 from ase.io import read
